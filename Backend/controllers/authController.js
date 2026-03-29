@@ -11,8 +11,7 @@ const registerUser = async (req, res, next) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      const error = new Error("User already exists");
-    error.statusCode = 400;
+      return res.status(400).json({ message: "User already exists" });
     }
 
     // hash password
@@ -24,6 +23,7 @@ const registerUser = async (req, res, next) => {
       email,
       password: hashedPassword,
     });
+
     res.status(201).json({
       message: "User registered successfully",
       user,
@@ -42,33 +42,35 @@ const loginUser = async (req, res, next) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      const error = new Error("Invalid credentials");
-    error.statusCode = 400;
-      
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      const error = new Error("Invalid credentials");
-    error.statusCode = 400;
+      return res.status(400).json({ message: "Invalid credentials" });
     }
+
     // generate JWT token
     const token = jwt.sign(
       { id: user._id },
       "SECRET_KEY",
       { expiresIn: "1d" }
     );
-    // set cookie
+
+    // set cookie (for cookie-based backend auth)
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       path: "/",
+      sameSite: "lax",
+      secure: false,
     });
 
     return res.status(200).json({
       message: "Login successful",
+      token,
       user,
     });
 
