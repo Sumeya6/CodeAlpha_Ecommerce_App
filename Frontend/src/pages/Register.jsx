@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
+import { useToast } from "../context/ToastContext";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -10,16 +11,18 @@ export default function Register() {
   });
 
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const submit = async (e) => {
     e.preventDefault();
 
     try {
       await API.post("/auth/register", form);
-      alert("Registered 🎉");
+      showToast("Registered 🎉", "success");
       navigate("/login");
-    } catch {
-      alert("Error ❌");
+    } catch (err) {
+      console.error(err.response?.data || err);
+      showToast(err.response?.data?.message || "Registration failed ❌", "error");
     }
   };
 

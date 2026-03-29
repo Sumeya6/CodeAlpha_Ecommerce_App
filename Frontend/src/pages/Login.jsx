@@ -1,23 +1,30 @@
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const { showToast } = useToast();
 
- const submit = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await API.post("/auth/login", form);
-    localStorage.setItem("token", res.data.token); // save token
-    alert("Logged in 🎉");
-    navigate("/");
-  } catch (err) {
-    console.log(err.response?.data); // see backend error
-    alert("Invalid credentials ❌");
-  }
-};
+  const submit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await API.post("/auth/login", form);
+      const token = res.data.token;
+      if (!token) throw new Error("Token missing");
+
+      await login(token, res.data.user);
+      showToast("Logged in 🎉", "success");
+      navigate("/");
+    } catch (err) {
+      console.error(err.response?.data || err);
+      showToast(err.response?.data?.message || "Invalid credentials ❌", "error");
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
