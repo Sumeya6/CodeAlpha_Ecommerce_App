@@ -11,7 +11,8 @@ const registerUser = async (req, res, next) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      const error = new Error("User already exists");
+    error.statusCode = 400;
     }
 
     // hash password
@@ -23,7 +24,6 @@ const registerUser = async (req, res, next) => {
       email,
       password: hashedPassword,
     });
-
     res.status(201).json({
       message: "User registered successfully",
       user,
@@ -42,14 +42,17 @@ const loginUser = async (req, res, next) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      const error = new Error("Invalid credentials");
+    error.statusCode = 400;
+      
     }
 
     // compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      const error = new Error("Invalid credentials");
+    error.statusCode = 400;
     }
     // generate JWT token
     const token = jwt.sign(
