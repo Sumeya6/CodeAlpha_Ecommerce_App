@@ -2,7 +2,7 @@ const Order = require("../models/Order");
 
 
 // CREATE ORDER
-const createOrder = async (req, res) => {
+const createOrder = async (req, res,next) => {
 
   try {
 
@@ -14,7 +14,7 @@ const createOrder = async (req, res) => {
       totalPrice
     });
 
-    res.status(201).json(order);
+    res.status(201).json({message:"order sucessful"});
 
   } catch (error) {
 
@@ -26,7 +26,7 @@ const createOrder = async (req, res) => {
 
 
 // GET USER ORDERS
-const getUserOrders = async (req, res) => {
+const getUserOrders = async (req, res,next) => {
 
   try {
 
@@ -43,12 +43,26 @@ const getUserOrders = async (req, res) => {
   }
 
 };
-//ADD TO CART
-const addToCart(req,res,next){
-  
-}
+const getSingleOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id).populate("products.product");
 
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // security check
+    if (order.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    res.status(200).json({ success: true, data: order });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 module.exports = {
   createOrder,
-  getUserOrders
+  getUserOrders,
+  getSingleOrder
 };
