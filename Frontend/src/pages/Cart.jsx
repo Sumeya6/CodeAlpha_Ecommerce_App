@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import { ShoppingCart } from "lucide-react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
-
+  const navigate = useNavigate();
   const fetchCart = () => {
     API.get("/cart")
       .then((res) => setCart(res.data.products || []))
@@ -41,6 +41,8 @@ export default function Cart() {
     }
   };
 
+  const totalPrice = cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
+
   return (
     <div className="p-6 max-w-3xl mx-auto">
       {cart.length === 0 && <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -49,12 +51,18 @@ export default function Cart() {
     <p className="text-gray-500 mt-2">
       You haven’t added any items yet. Start shopping to fill your cart!
     </p>
-    <button
+    {/* <button
       onClick={() => window.location.href = "/"}
       className="mt-6 bg-primary text-white px-6 py-2 rounded-lg hover:opacity-90 transition"
     >
       Return to Shop
-    </button>
+    </button> */}
+    <button
+    onClick={() => navigate("/")}
+    className="mt-6 bg-primary text-white px-6 py-2 rounded-lg hover:opacity-90 transition"
+  >
+  Return to Shop
+  </button>
   </div>}
   {/* {cart.length === 0 && (
   <div className="flex flex-col items-center justify-center text-center py-16">
@@ -88,7 +96,7 @@ export default function Cart() {
           <div>
             <h2 className="font-bold">{item.product.name}</h2>
             <p className="text-sm text-gray-500">
-              ${item.product.price}
+              ${item.product.price} x {item.quantity} = ${(item.product.price * item.quantity).toFixed(2)}
             </p>
           </div>
 
@@ -114,12 +122,18 @@ export default function Cart() {
       ))}
 
       {cart.length > 0 && (
-        <button
-          onClick={createOrder}
-          className="bg-primary text-white px-6 py-2 rounded mt-4"
-        >
-          Place Order
-        </button>
+        <div className="mt-6 bg-white p-4 rounded shadow">
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-lg font-semibold">Total Price:</span>
+            <span className="text-2xl font-bold text-primary">${totalPrice.toFixed(2)}</span>
+          </div>
+          <button
+            onClick={createOrder}
+            className="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition font-semibold"
+          >
+            Place Order
+          </button>
+        </div>
       )}
     </div>
   );
