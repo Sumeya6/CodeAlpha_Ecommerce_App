@@ -81,10 +81,11 @@ Simple-Ecommerce-app/
 │       ├── components/
 │       │   ├── Loader.jsx
 │       │   ├── Navbar.jsx
-│       │   └── ProductCard.jsx
+│       │   ├── ProductCard.jsx
+│       │   └── ProtectedRoute.jsx
 │       ├── context/
 │       │   ├── AuthContext.jsx
-│       │   └── CartContext.jsx
+│       │   └── ToastContext.jsx
 │       ├── hooks/
 │       │   └── useAuth.js
 │       ├── pages/
@@ -96,8 +97,6 @@ Simple-Ecommerce-app/
 │       │   └── Register.jsx
 │       ├── services/
 │       │   └── api.js
-│       └── utils/
-│           └── formatPrice.js
 │
 └── README.md
 ```
@@ -129,6 +128,8 @@ Simple-Ecommerce-app/
 4. Start the server:
    ```
    npm run server
+   # or if your `package.json` sets server script to `server.js` but your file is index.js, run:
+   node index.js
    ```
 
 ### Frontend Setup
