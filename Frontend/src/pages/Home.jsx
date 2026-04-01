@@ -18,10 +18,12 @@ export default function Home() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="p-6 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    
+    <div className="p-6 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 mt-16">
       {products?.map((p) => (
         <ProductCard key={p._id} product={p} />
       ))}
     </div>
+  
   );
 }

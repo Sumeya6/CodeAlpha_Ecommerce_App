@@ -27,10 +27,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+    <div className="h-full flex items-center justify-center bg-gray-100 p-14">
       <form
         onSubmit={submit}
-        className="w-full max-w-md bg-white p-6 rounded-xl shadow-md sm:p-8"
+        className="w-full max-w-md bg-white mt-8 rounded-xl shadow-md sm:p-8"
       >
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
@@ -58,7 +58,7 @@ export default function Login() {
           <div className="flex gap-2">
           <p  className="text-sm text-gray-600">No account?</p> <Link
             to="/register"
-            className="text-sm text-gray-600 hover:underline"
+            className="text-sm text-primary hover:underline"
           >
             Register
           </Link></div>
