@@ -1,6 +1,6 @@
 # Simple Ecommerce App
 
-A full-stack simple e-commerce store built with React, Node.js, Express, and MongoDB featuring product listings, shopping cart, user authentication, and order processing.
+A full-stack e-commerce store built with React, Node.js, Express, and MongoDB featuring product listings, shopping cart, user authentication, and order processing.
 
 ---
 
